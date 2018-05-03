@@ -1,1 +1,0 @@
-../../../../ZaloSDK/ZaloSDK/Frameworks/ZaloSDKCoreKit.framework/Headers/UIDevice+ZDKExtension.h

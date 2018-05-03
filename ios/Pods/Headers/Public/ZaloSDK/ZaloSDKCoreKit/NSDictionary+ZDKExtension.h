@@ -1,1 +1,0 @@
-../../../../ZaloSDK/ZaloSDK/Frameworks/ZaloSDKCoreKit.framework/Headers/NSDictionary+ZDKExtension.h
