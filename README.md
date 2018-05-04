@@ -1,4 +1,10 @@
-#react-native-zalo
+## Hỗ trợ
+
+
+iOS
+
+Android: Đang code
+
 
 ## Cài đặt thư viện
 
