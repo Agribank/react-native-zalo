@@ -58,8 +58,8 @@ export default class App extends Component<Props> {
     RNZalo.login(this._success, this._faiulre);
   }
 
-  _success = (authCode) => {
-    console.log(authCode);
+  _success = (userObj) => {
+    console.log(userObj);
   };
 
   _faiulre = () => {

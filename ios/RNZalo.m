@@ -22,34 +22,41 @@ RCT_EXPORT_METHOD(login: (RCTResponseSenderBlock)successCallback failureCallback
                                                      handler:^(ZOOauthResponseObject *response) { //callback kết quả đăng nhập
                                                          if([response isSucess]) {
                                                              // đăng nhập thành công
-                                                             NSString *oauthCode = response.oauthCode;
-                                                             // có thể dùng oauth code này để verify lại từ server của ứng dụng
-                                                             successCallback(@[oauthCode]);
-                                                         } else if(response.errorCode != kZaloSDKErrorCodeUserCancel) {
+                                                             
+                                                             NSMutableDictionary *userObj = [[NSMutableDictionary alloc] init];
+                                                             [userObj setObject:response.oauthCode.length ? response.oauthCode : @"" forKey:@"oauthCode"];
+                                                             [userObj setObject:response.userId.length ? response.userId : @""  forKey:@"userId"];
+                                                             [userObj setObject:response.displayName.length ? response.displayName : @"" forKey:@"displayName"];
+                                                             [userObj setObject:response.phoneNumber.length ? response.phoneNumber : @"" forKey:@"phoneNumber"];
+                                                             [userObj setObject:response.dob.length ? response.dob : @"" forKey:@"dob"];
+                                                             [userObj setObject:response.gender.length ? response.gender : @"" forKey:@"gender"];
+                                                             
+                                                             successCallback(@[userObj]);
+                                                         } else {
                                                              //lỗi đăng nhập
                                                              failureCallback(
                                                                              [[NSError alloc] initWithDomain:@"Zalo Oauth" code:response.errorCode userInfo:@{
-                                                                                                                                                             @"message": response.errorMessage}]
-                                                             );
+                                                                                                                                                              @"message": response.errorMessage}]
+                                                                             );
                                                          }
                                                      }];
 }
 
 RCT_EXPORT_METHOD(checkZaloOAuthCode: (NSString *)code successCallback: (RCTResponseSenderBlock)successCallback failureCallback: (RCTResponseErrorBlock)failureCallback) {
     [[ZaloSDK sharedInstance] isAuthenticatedZaloWithCompletionHandler:
-    ^(ZOOauthResponseObject *response) {
-
-        if(response.errorCode == kZaloSDKErrorCodeNoneError) {
-            //Đã authenticate
-            successCallback(@[@TRUE]);
-        }
-        else {
-            failureCallback(
-                            [[NSError alloc] initWithDomain:@"Zalo Oauth" code:response.errorCode userInfo:@{
-                                                                                                             @"message": response.errorMessage}]
-                            );
-        }
-    }];
+     ^(ZOOauthResponseObject *response) {
+         
+         if(response.errorCode == kZaloSDKErrorCodeNoneError) {
+             //Đã authenticate
+             successCallback(@[@TRUE]);
+         }
+         else {
+             failureCallback(
+                             [[NSError alloc] initWithDomain:@"Zalo Oauth" code:response.errorCode userInfo:@{
+                                                                                                              @"message": response.errorMessage}]
+                             );
+         }
+     }];
 }
 
 RCT_EXPORT_METHOD(logout) {
@@ -59,7 +66,7 @@ RCT_EXPORT_METHOD(logout) {
 RCT_EXPORT_METHOD(getZaloUserProfile: (RCTResponseSenderBlock)successCallback failureCallback: (RCTResponseErrorBlock)failureCallback) {
     [[ZaloSDK sharedInstance] getZaloUserProfileWithCallback:
      ^(ZOGraphResponseObject *response) {
-
+         
          if(response.errorCode == kZaloSDKErrorCodeNoneError) {
              // Lấy profile thành công
              successCallback(@[response.data]);
@@ -70,8 +77,9 @@ RCT_EXPORT_METHOD(getZaloUserProfile: (RCTResponseSenderBlock)successCallback fa
                              );
          }
      }];
-
+    
 }
 
 @end
-  
+
+
